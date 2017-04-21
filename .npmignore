@@ -1,0 +1,16 @@
+docs/readme
+node_modules
+src
+tasks
+test
+typings
+.gitignore
+.jshintrc
+Gruntfile.js
+npm-debug.log
+package.json
+typings.json
+lib/.baseDir*
+.idea
+.npmrc
+.gitlab-ci.yml
