@@ -13,4 +13,4 @@ typings.json
 lib/.baseDir*
 .idea
 .npmrc
-.gitlab-ci.yml
+.travis.yml
