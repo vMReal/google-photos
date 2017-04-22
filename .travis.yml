@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+  - "4.7"
+
+install:
+    - npm install
+script:
+    - echo "test"
+
+
+before_deploy:
+    - npm version --no-git-tag-version $TRAVIS_TAG
+
+deploy:
+  provider: npm
+  email: "${NPM_EMAIL}"
+  api_key: "${NPM_API_KEY}"
+  on:
+      tags: true
