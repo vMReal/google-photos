@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "homepage": "",
   "author": {
-    "name" : "Bondarenko Victor",
-    "email" : "mreal.victor@gmail.com"
+    "name": "Bondarenko Victor",
+    "email": "mreal.victor@gmail.com"
   },
   "bugs": {
     "url": "https://github.com/vMReal/google-photos/issues"
@@ -36,5 +36,8 @@
     "typeScript",
     "nodejs"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "promise": "^7.1.1"
+  }
 }
