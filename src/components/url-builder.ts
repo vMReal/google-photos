@@ -3,37 +3,31 @@ export const PROJECTION = {
     API: 'api',
     BASE: 'base'
 }
-
+const BASE_URL = 'https://picasaweb.google.com/data/feed';
 export const USER_OWNER = 'default';
 
-export const BASE_URL = 'https://picasaweb.google.com/data/feed';
-
-const TEMPLATE_URL = {
-    BASE: 'projection/user/userID/albumid/albumID/photoid/photoID',
-    BY_ALBUM: '',
-}
 
 export class UrlBuilder {
 
-    public userId: string = USER_OWNER;
-    public projection: string = PROJECTION.API;
-    public albumId: string;
-    public photoId: string;
+    protected userId: string = USER_OWNER;
+    protected projection: string = PROJECTION.API;
+    protected albumId: string;
+    protected photoId: string;
 
     public setProjection(projection: string) {
-
+        this.projection = projection;
     }
 
     public setUser(id: string) {
-
+        this.userId = id;
     }
 
     public setAlbumId(id: string) {
-
+        this.albumId = id;
     }
 
     public setPhotoId(id: string) {
-
+        this.albumId = id;
     }
 
     public getUrl(): string {
@@ -45,7 +39,7 @@ export class UrlBuilder {
         if (this.albumId)
             url += `/albumid/${this.albumId}`;
 
-        if (this.albumId)
+        if (this.photoId)
             url += `/photoid/${this.photoId}`;
 
         return url;

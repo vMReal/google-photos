@@ -1,101 +1,133 @@
 import { Promise } from 'promise';
+import { Observer, Observable} from 'rxjs';
+import {QueryBuilder, Bbox, PHOTO_MARKER} from "./components/query-builder";
+import {UrlBuilder} from "./components/url-builder";
+import {Response} from "./components/response";
 
 
-export class PWA {
 
-    constructor(bearToken: string) {
+export class Query {
 
+    private query: QueryBuilder;
+    private urlBuilder: UrlBuilder;
+
+
+    public constructor(urlBuilder: UrlBuilder) {
+        this.query = new QueryBuilder();
+        this.urlBuilder = urlBuilder;
     }
 
-    public select(): PWA {
+    public limit(limit: number): this {
+        this.query.setParams({ limit: limit });
         return this;
     }
 
-    public limit(): PWA {
+    public offset(offset: number): this {
+        this.query.setParams({ offset: offset });
         return this;
     }
 
-    public offset(): PWA {
+    public byExactPhrase(phrase: string): this {
+        this.query.setParams({ exactPhrase: phrase });
         return this;
     }
 
-    public withExactPhrase(): PWA {
+    public byAbsenceWord(word: string): this {
+        this.query.setParams({ without_word: word });
         return this;
     }
 
-    public withWorld(): PWA {
+    public byWold(word: string): this {
+        this.query.setParams({ word: word });
         return this;
     }
 
-    public withoutWorld(): PWA {
+    public byBbox(bbox: Bbox): this {
+        this.query.setParams({ bbox: Bbox });
         return this;
     }
 
-    public byBbox(): PWA {
+    public byLocationName(name: string): this {
+        this.query.setParams({ location: name });
         return this;
     }
 
-    public byLocationName(): PWA {
+    public returnPhoto(size: number): this {
+        this.query.setParams({
+            photo: {size: size, marker: PHOTO_MARKER.UNCROPPED}
+        });
         return this;
     }
 
-    public addPhoto(): PWA {
+    public returnCroppedPhoto(size: number): this {
+        this.query.setParams({
+            photo: {size: size, marker: PHOTO_MARKER.CROPPED}
+        });
         return this;
     }
 
-    public addCroppedPhoto(): PWA {
+    public returnOriginPhoto(): this {
+        this.query.setParams({
+            photo: {size: null, marker: PHOTO_MARKER.ORIGINAL}
+        });
         return this;
     }
 
-    public addOriginPhoto(): PWA {
+    public returnThumbnail(size: number): this {
+        this.query.setParams({
+            photo: {size: size, marker: PHOTO_MARKER.UNCROPPED}
+        });
         return this;
     }
 
-    public addThumbnail(): PWA {
+    public returnCroppedThumbnail(size: number): this {
+        this.query.setParams({
+            photo: {size: size, marker: PHOTO_MARKER.CROPPED}
+        });
         return this;
     }
 
-    public addCroppedThumbnail(): PWA {
+    public returnGeoData(size: number): this {
         return this;
     }
 
-    findPhoto(id: string) {
-
-    }
-
-    findPhotos(albumId: string = null): Promise<PhotoCollection> {
-        return new Promise((resolver, reject) => {
+    public execute(bearToken: string): Observable<Response> {
+        return new Observable((observer: Observer<Response>) => {
 
         });
     }
-
-    findAlbum(id: string) {
-
-    }
-
-    findAlbums() {
-
-    }
 }
 
 
-export declare type Items = [Album | Photo] ;
 
 
-export interface Result {
-    meta: {
-        limit: number,
-        skip: number,
-        total: number,
-        returned: number,
-    },
-    items: Items,
-}
+let query = Query.byToken('bearToken')
+    .withoutWold('Cat')
+    .withExactPhrase('Maine Coon')
+    .withoutWold('eat')
 
-export interface Photo {
-    original_photo: string;
-}
+    .byLocationName('Ukraine')
+    .byBbox([-35.55, 35.55, -94.44, 55])
 
-export interface Album {
-    original_photo: string;
-}
+    .addThumbnail(1600)
+    .addCroppedThumbnail(800)
+    .addOriginPhoto()
+
+    .limit(100);
+
+
+query.limit(100).findPhotos();
+query.shift().findPhotos();
+query.shift().findPhotos();
+query.shift().findPhotos();
+query.shift().findPhotos();
+
+
+let album = Album.findById();
+let album = Album.findByIds();
+let album = Album.query();
+
+let album = Photo.findById();
+let album = Photo.findByIds();
+let album = Photo.insideAlbumId()
+let album = Photo.query()

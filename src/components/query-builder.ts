@@ -1,48 +1,102 @@
-import lodash from 'lodash';
+import { uniq, isEmpty, isUndefined, merge } from 'lodash';
 
+
+export declare type Bbox = [number, number, number, number];
+
+export const PHOTO_MARKER = {
+    CROPPED: 'c',
+    UNCROPPED: 'u',
+    ORIGINAL: 'd'
+}
+
+
+export interface IPhotoSettings {
+    size: number,
+    marker: string,
+}
 
 export interface IParam {
     access?: string,
     alt?: string,
-    bbox?: string,
-    fields?: string,
-    imgmax?: string,
+    bbox?: Bbox,
+    fields?: string[],
+    photo?: IPhotoSettings,
+    thumbnails?: IPhotoSettings[],
     kind?: string,
-    l?: string,
-    'max-results'?: number,
-    prettyprint?: string,
-    q?: string,
-    'start-index'?: number,
-    thumbsize?: string,
-    l?: string,
+    location?: string,
+    limit?: number,
+    prettyprint?: boolean,
+    words?: string[],
+    without_words?: string[],
+    exact_phrases?: string[],
+    offset?: number,
 }
 
 export class QueryBuilder {
 
-    private params: IParam = {};
+    private params: IParam = {
+        alt: 'json'
+    };
 
-    constructor()
 
-
-    public extendParams(params: IParam, separator: string = null) {
-        if (!separator)
-            return this.params = lodash.extend(this.params, params);
-
-        for (let key in params ) {
-            if (lodash.isEmpty(this.params[key]))
-                this.params[key] = params[key];
-            else
-                this.params[key] += separator + params[key]
-        }
+    public setParams(params: IParam) {
+        this.params = merge(this.params, params)
     }
 
     public getQueryString(): string {
+        let query: string = '';
 
+        if (!isUndefined(this.params.words) || !isUndefined(this.params.without_words) || !isUndefined(this.params.exact_phrases))
+            query += `q=${ encodeURIComponent( this.searchBuilder(this.params.words, this.params.without_words, this.params.exact_phrases) ) }`;
+
+        for (let key in this.params) {
+            switch (key) {
+                case 'access':
+                case 'alt':
+                case 'kind':
+                case 'prettyprint':
+                    query += `${key}=${ encodeURIComponent(this.params[key]) }`;
+                    break;
+                case 'location':
+                    query += `l=${ encodeURIComponent(this.params.location) }`;
+                    break;
+                case 'limit':
+                    query += `max-results=${ encodeURIComponent(String(this.params.limit)) }`;
+                    break;
+                case 'offset':
+                    query += `start-index=${ encodeURIComponent(String(this.params.offset)) }`;
+                    break;
+                case 'bbox':
+                    query += `bbox=${ encodeURIComponent((<number[]> this.params.bbox).join(',')) }`;
+                    break;
+                case 'fields':
+                    query += `fields=${ encodeURIComponent( this.fieldsBuilder(this.params[key]) ) }`;
+                    break;
+                case 'photo':
+                    query += `imgmax=${ encodeURIComponent(this.photoBuilder(this.params.photo)) }`;
+                    break;
+                case 'thumbnails':
+                    query += `thumbsize=${ encodeURIComponent(this.thumbnailsBuilder(this.params.thumbnails)) }`;
+                    break;
+            }
+        }
+        return query;
     }
 
-    public getUrl(linkParams: Object) {
 
+    private fieldsBuilder(fields: string[]): string {
+        return '';
     }
 
-    public getFullUrl
+    private photoBuilder(photo: IPhotoSettings): string { //@TODO add waring by sizes
+        return '';
+    }
+
+    private thumbnailsBuilder(thumbnails: IPhotoSettings[]): string { //@TODO add waring by sizes
+        return '';
+    }
+
+    private searchBuilder(words: string[] = [], withoutWords: string[] = [], exactPhrase : string[] = []): string {
+        return '';
+    }
 }
