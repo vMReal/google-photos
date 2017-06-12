@@ -2,7 +2,8 @@
   "name": "google-photos",
   "dependencies": {
     "lodash": "registry:dt/lodash#4.14.0+20170324155812",
-    "promise": "registry:dt/promise#7.1.1+20160726182927"
+    "promise": "registry:dt/promise#7.1.1+20160726182927",
+    "request": "registry:dt/request#0.0.0+20170323073920"
   },
   "globalDependencies": {}
 }

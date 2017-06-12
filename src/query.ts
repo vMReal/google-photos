@@ -3,6 +3,9 @@ import { Observer, Observable} from 'rxjs';
 import {QueryBuilder, Bbox, PHOTO_MARKER} from "./components/query-builder";
 import {UrlBuilder} from "./components/url-builder";
 import {Response} from "./components/response";
+import {RequestResponse, RequestAPI} from "request";
+import {Error} from "./components/error";
+import {Parser} from "./components/parser";
 
 
 
@@ -93,41 +96,20 @@ export class Query {
 
     public execute(bearToken: string): Observable<Response> {
         return new Observable((observer: Observer<Response>) => {
+            RequestAPI
+                .get(
+                    `${ this.urlBuilder.getUrl() }?${ this.query.getQueryString() }`,
+                    (err: any, res: RequestResponse, body: any) => {
+                        if (err)
+                            return observer.error( new Error(null, 'Incorrect configuration', err) );
 
+                        if( (res.statusCode < 200 || res.statusCode > 299) && res.statusCode != 304)
+                            observer.error( new Error(res.statusCode , body || res.statusMessage, {}) );
+
+                        let parser = Parser(body);
+                        observer.next(new Response(parser));
+                    }).auth(null, null, true, bearToken);
         });
     }
 }
 
-
-
-
-let query = Query.byToken('bearToken')
-    .withoutWold('Cat')
-    .withExactPhrase('Maine Coon')
-    .withoutWold('eat')
-
-    .byLocationName('Ukraine')
-    .byBbox([-35.55, 35.55, -94.44, 55])
-
-    .addThumbnail(1600)
-    .addCroppedThumbnail(800)
-    .addOriginPhoto()
-
-    .limit(100);
-
-
-query.limit(100).findPhotos();
-query.shift().findPhotos();
-query.shift().findPhotos();
-query.shift().findPhotos();
-query.shift().findPhotos();
-
-
-let album = Album.findById();
-let album = Album.findByIds();
-let album = Album.query();
-
-let album = Photo.findById();
-let album = Photo.findByIds();
-let album = Photo.insideAlbumId()
-let album = Photo.query()

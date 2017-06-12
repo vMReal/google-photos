@@ -37,8 +37,10 @@
     "nodejs"
   ],
   "dependencies": {
+    "@types/node": "^7.0.28",
     "lodash": "^4.17.4",
     "promise": "^7.1.1",
+    "request": "^2.81.0",
     "rxjs": "^5.4.0"
   }
 }
