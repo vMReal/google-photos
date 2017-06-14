@@ -2,7 +2,6 @@
 export class Error {
 
     public httpCode: number | null;
-
     public message: string = '';
 
     constructor(httpCode: number | null, message: string = '', details: any = {}) {

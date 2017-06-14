@@ -12,9 +12,9 @@ export class Response {
     protected items: Entity[] = [];
     protected totalCount: number;
 
-    public constructor(parser: Parser)
-    public constructor(responses: Response[])
-    public constructor(res: Parser | Response[])
+    constructor(parser: Parser)
+    constructor(responses: Response[])
+    constructor(res: Parser | Response[])
     {
         if (res instanceof Parser)
             this.extractParser(res);

@@ -7,17 +7,26 @@ import {RequestResponse, RequestAPI} from "request";
 import {Error} from "./components/error";
 import {Parser} from "./components/parser";
 
-
+export const KIND = {
+    ALBUM: 'album',
+    PHOTO: 'photo',
+}
 
 export class Query {
 
     private query: QueryBuilder;
     private urlBuilder: UrlBuilder;
+    protected bearToken: string = '';
 
 
-    public constructor(urlBuilder: UrlBuilder) {
-        this.query = new QueryBuilder();
+    public constructor(urlBuilder: UrlBuilder, kind: string) {
         this.urlBuilder = urlBuilder;
+        this.query = new QueryBuilder();
+        this.query.setParams({kind: kind});
+    }
+
+    public auth(bearToken: string) {
+        this.
     }
 
     public limit(limit: number): this {
@@ -94,7 +103,7 @@ export class Query {
         return this;
     }
 
-    public execute(bearToken: string): Observable<Response> {
+    public execute(): Observable<Response> {
         return new Observable((observer: Observer<Response>) => {
             RequestAPI
                 .get(

@@ -1,8 +1,10 @@
 import {Observer, Observable} from 'rxjs';
 import {UrlBuilder, PROJECTION} from "./components/url-builder";
-import {Query} from "./pwa";
+import {Query, KIND} from "./query";
 import {Response} from "./components/response";
+import {Parser} from "./components/parser";
 import {Entity} from "./entity";
+import {Error} from "./components/error";
 
 export class Photo {
     public static findById() {
@@ -23,37 +25,6 @@ export class Photo {
 }
 
 
-export class Album extends Entity {
-
-    public static findById(id: string): Observable<Response> {
-        let urlBuilder = new UrlBuilder();
-        urlBuilder.setProjection(PROJECTION.API);
-        urlBuilder.setAlbumId(id);
-
-        let query = new Query(urlBuilder);
-        return query.execute(this.bearToken);
-    }
-
-    public static findByIds(ids: string[]): Observable<Response> {
-
-        let urlBuilder = new UrlBuilder();
-        urlBuilder.setProjection(PROJECTION.API);
-        urlBuilder.setAlbumId(id);
-
-        let query = new Query(urlBuilder);
-        return query.execute(this.bearToken);
-
-    }
-
-
-    public static query(): Query {
-        let urlBuilder = new UrlBuilder();
-        urlBuilder.setProjection(PROJECTION.API);
-        urlBuilder.setAlbumId(id);
-
-        return new Query(urlBuilder);
-    }
-}
 
 
 let album = Album.findById();
