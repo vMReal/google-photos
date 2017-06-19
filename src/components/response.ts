@@ -50,4 +50,16 @@ export class Response {
     public get totalCount(): number {
         return this.totalCount;
     }
+
+
+
+    public user: {
+        id: 'number'
+        nickname: 'string'
+    }
+
+    public quota: {
+        limit: 'number',
+        current: 'number'
+    }
 }

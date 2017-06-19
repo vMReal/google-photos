@@ -1,4 +1,4 @@
-import { Promise } from 'promise';
+import { clone } from 'lodash';
 import { Observer, Observable} from 'rxjs';
 import {QueryBuilder, Bbox, PHOTO_MARKER} from "./components/query-builder";
 import {UrlBuilder} from "./components/url-builder";
@@ -14,23 +14,23 @@ export const KIND = {
 
 export class Query {
 
-    private query: QueryBuilder;
+    private queryBuilder: QueryBuilder;
     private urlBuilder: UrlBuilder;
     protected bearToken: string = '';
 
 
     public constructor(urlBuilder: UrlBuilder, kind: string) {
         this.urlBuilder = urlBuilder;
-        this.query = new QueryBuilder();
-        this.query.setParams({kind: kind});
+        this.queryBuilder = new QueryBuilder();
+        this.queryBuilder.setParams({kind: kind});
     }
 
     public auth(bearToken: string) {
-        this.
+        this.bearToken = bearToken;
     }
 
     public limit(limit: number): this {
-        this.query.setParams({ limit: limit });
+        this.queryBuilder.setParams({ limit: limit });
         return this;
     }
 
@@ -40,60 +40,60 @@ export class Query {
     }
 
     public byExactPhrase(phrase: string): this {
-        this.query.setParams({ exactPhrase: phrase });
+        this.queryBuilder.setParams({ exactPhrase: phrase });
         return this;
     }
 
     public byAbsenceWord(word: string): this {
-        this.query.setParams({ without_word: word });
+        this.queryBuilder.setParams({ without_word: word });
         return this;
     }
 
     public byWold(word: string): this {
-        this.query.setParams({ word: word });
+        this.queryBuilder.setParams({ word: word });
         return this;
     }
 
     public byBbox(bbox: Bbox): this {
-        this.query.setParams({ bbox: Bbox });
+        this.queryBuilder.setParams({ bbox: Bbox });
         return this;
     }
 
     public byLocationName(name: string): this {
-        this.query.setParams({ location: name });
+        this.queryBuilder.setParams({ location: name });
         return this;
     }
 
     public returnPhoto(size: number): this {
-        this.query.setParams({
+        this.queryBuilder.setParams({
             photo: {size: size, marker: PHOTO_MARKER.UNCROPPED}
         });
         return this;
     }
 
     public returnCroppedPhoto(size: number): this {
-        this.query.setParams({
+        this.queryBuilder.setParams({
             photo: {size: size, marker: PHOTO_MARKER.CROPPED}
         });
         return this;
     }
 
     public returnOriginPhoto(): this {
-        this.query.setParams({
+        this.queryBuilder.setParams({
             photo: {size: null, marker: PHOTO_MARKER.ORIGINAL}
         });
         return this;
     }
 
     public returnThumbnail(size: number): this {
-        this.query.setParams({
+        this.queryBuilder.setParams({
             photo: {size: size, marker: PHOTO_MARKER.UNCROPPED}
         });
         return this;
     }
 
     public returnCroppedThumbnail(size: number): this {
-        this.query.setParams({
+        this.queryBuilder.setParams({
             photo: {size: size, marker: PHOTO_MARKER.CROPPED}
         });
         return this;
@@ -105,9 +105,10 @@ export class Query {
 
     public execute(): Observable<Response> {
         return new Observable((observer: Observer<Response>) => {
+            let query: Query = clone(this);
             RequestAPI
                 .get(
-                    `${ this.urlBuilder.getUrl() }?${ this.query.getQueryString() }`,
+                    `${ this.urlBuilder.getUrl() }?${ query.queryBuilder.getQueryString() }`,
                     (err: any, res: RequestResponse, body: any) => {
                         if (err)
                             return observer.error( new Error(null, 'Incorrect configuration', err) );
@@ -117,7 +118,7 @@ export class Query {
 
                         let parser = Parser(body);
                         observer.next(new Response(parser));
-                    }).auth(null, null, true, bearToken);
+                    }).auth(null, null, true, this.bearToken);
         });
     }
 }

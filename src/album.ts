@@ -14,20 +14,21 @@ export class Album extends Entity {
         urlBuilder.setAlbumId(id);
 
         let query = new Query(urlBuilder, KIND.ALBUM);
-        return query.execute(this.bearToken);
+        query.auth(this.bearToken);
+        return query.execute();
     }
 
     public static findByIds(ids: string[]): Observable<Response> {
 
         let urlBuilder = new UrlBuilder();
         urlBuilder.setProjection(PROJECTION.API);
-        let query = new Query(urlBuilder, KIND.ALBUM);
-
         let sources: Observable<Response> [] = [];
         for (let id of ids) {
             urlBuilder.setAlbumId(id);
             sources.push( new Observable<Response>((observer: Observer<Response>) => {
-                query.execute(this.bearToken).subscribe(
+                let query = new Query(urlBuilder, KIND.ALBUM);
+                query.auth(this.bearToken);
+                query.execute().subscribe(
                     (res: Response) => {
                         observer.next(res);
                         observer.complete();
@@ -49,6 +50,8 @@ export class Album extends Entity {
     public static query(): Query {
         let urlBuilder: UrlBuilder = new UrlBuilder();
         urlBuilder.setProjection(PROJECTION.API);
-        return new Query(urlBuilder, KIND.ALBUM);
+        let query = new Query(urlBuilder, KIND.ALBUM);
+        query.auth(this.bearToken);
+        return query;
     }
 }

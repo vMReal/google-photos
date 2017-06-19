@@ -9,6 +9,10 @@ export const PHOTO_MARKER = {
     ORIGINAL: 'd'
 }
 
+export const FIELDS = {
+    TITLE: 'title',
+}
+
 
 export interface IPhotoSettings {
     size: number,
@@ -34,7 +38,7 @@ export interface IParam {
 
 export class QueryBuilder {
 
-    private params: IParam = {
+    protected params: IParam = {
         alt: 'json'
     };
 
@@ -78,25 +82,37 @@ export class QueryBuilder {
                 case 'thumbnails':
                     query += `thumbsize=${ encodeURIComponent(this.thumbnailsBuilder(this.params.thumbnails)) }`;
                     break;
+                case  'fields':
+                    query += `fields=${ encodeURIComponent(this.fieldsBuilder(this.params.fields)) }`;
+                    break;
             }
         }
         return query;
     }
 
 
-    private fieldsBuilder(fields: string[]): string {
+    protected fieldsBuilder(fields: string[]): string {
         return '';
     }
 
-    private photoBuilder(photo: IPhotoSettings): string { //@TODO add waring by sizes
+    protected photoBuilder(photo: IPhotoSettings): string { //@TODO add waring by sizes
         return '';
     }
 
-    private thumbnailsBuilder(thumbnails: IPhotoSettings[]): string { //@TODO add waring by sizes
+    protected thumbnailsBuilder(thumbnails: IPhotoSettings[]): string { //@TODO add waring by sizes
         return '';
     }
 
-    private searchBuilder(words: string[] = [], withoutWords: string[] = [], exactPhrase : string[] = []): string {
+    protected searchBuilder(words: string[] = [], withoutWords: string[] = [], exactPhrase : string[] = []): string {
         return '';
+    }
+
+    protected fieldsBuilder(): string {
+        return '*';
+    }
+
+    protected select(element: string) {
+        this.params.fields.push(element);
+        this.params.fields = uniq(this.params.fields);
     }
 }
