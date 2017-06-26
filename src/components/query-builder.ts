@@ -109,6 +109,7 @@ export class QueryBuilder {
 
     protected fieldsBuilder(): string {
         return '*';
+        https://picasaweb.google.com/data/feed/api/user/default?imgmax=d&kind=photo&v=3&fields=openSearch:totalResults,openSearch:startIndex,openSearch:itemsPerPage,gphoto:user,gphoto:nickname,entry(published,updated, gphoto:id,gphoto:albumid,gphoto:access,gphoto:height, gphoto:width,gphoto:size,gphoto:timestamp,gphoto:imageVersion, exif:tags/*, georss:where,gphoto:client,media:group)
     }
 
     protected select(element: string) {
