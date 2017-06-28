@@ -6,6 +6,7 @@ import {Response} from "./components/response";
 import {RequestResponse, RequestAPI} from "request";
 import {Error} from "./components/error";
 import {Parser} from "./components/parser";
+import {FieldMap, FieldsMap, FIELDS_MAPS_CONFIGS} from "./components/fields-map";
 
 export const KIND = {
     ALBUM: 'album',
@@ -14,9 +15,10 @@ export const KIND = {
 
 export class Query {
 
-    private queryBuilder: QueryBuilder;
-    private urlBuilder: UrlBuilder;
+    protected queryBuilder: QueryBuilder;
+    protected urlBuilder: UrlBuilder;
     protected bearToken: string = '';
+    protected fields: string[];
 
 
     public constructor(urlBuilder: UrlBuilder, kind: string) {
@@ -104,6 +106,9 @@ export class Query {
     }
 
     public execute(): Observable<Response> {
+        let fieldsMap: FieldsMap = FieldsMap(FIELDS_MAPS_CONFIGS, this.fields);
+        this.queryBuilder.setParams({fields: fieldsMap.requestedFields});
+
         return new Observable((observer: Observer<Response>) => {
             let query: Query = clone(this);
             RequestAPI

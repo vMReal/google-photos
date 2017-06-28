@@ -9,11 +9,6 @@ export const PHOTO_MARKER = {
     ORIGINAL: 'd'
 }
 
-export const FIELDS = {
-    TITLE: 'title',
-}
-
-
 export interface IPhotoSettings {
     size: number,
     marker: string,
@@ -23,7 +18,7 @@ export interface IParam {
     access?: string,
     alt?: string,
     bbox?: Bbox,
-    fields?: string[],
+    fields?: string,
     photo?: IPhotoSettings,
     thumbnails?: IPhotoSettings[],
     kind?: string,
@@ -83,7 +78,7 @@ export class QueryBuilder {
                     query += `thumbsize=${ encodeURIComponent(this.thumbnailsBuilder(this.params.thumbnails)) }`;
                     break;
                 case  'fields':
-                    query += `fields=${ encodeURIComponent(this.fieldsBuilder(this.params.fields)) }`;
+                    query += `fields=${ encodeURIComponent(this.params.fields) }`;
                     break;
             }
         }
@@ -105,15 +100,5 @@ export class QueryBuilder {
 
     protected searchBuilder(words: string[] = [], withoutWords: string[] = [], exactPhrase : string[] = []): string {
         return '';
-    }
-
-    protected fieldsBuilder(): string {
-        return '*';
-        https://picasaweb.google.com/data/feed/api/user/default?imgmax=d&kind=photo&v=3&fields=openSearch:totalResults,openSearch:startIndex,openSearch:itemsPerPage,gphoto:user,gphoto:nickname,entry(published,updated, gphoto:id,gphoto:albumid,gphoto:access,gphoto:height, gphoto:width,gphoto:size,gphoto:timestamp,gphoto:imageVersion, exif:tags/*, georss:where,gphoto:client,media:group)
-    }
-
-    protected select(element: string) {
-        this.params.fields.push(element);
-        this.params.fields = uniq(this.params.fields);
     }
 }
