@@ -5,24 +5,39 @@ export const FIELDS = {
     TITLE: 'title',
 }
 
-export const FIELDS_MAPS_CONFIGS: FieldsMapConfig[] = [
+export const FIELDS_MAPS_CONFIGS: IFieldsMapConfig[] = [
 
 ]
+
+
+export interface IFieldsMapConfig {
+    rootRelations: IFieldRelation[]
+    entityRelations: IFieldRelation[]
+    xpath: string,
+    scope: string,
+}
+
+export interface IFieldRelation {
+    originPath: string,
+    path: string,
+    optional: boolean,
+}
 
 export class FieldsMap {
 
     protected configs: IFieldsMapConfig[] = [];
 
-    protected rootRelations: FieldRelation[];
-    protected entityRelations: FieldRelation[];
+    protected rootRelations: IFieldRelation[];
+    protected entityRelations: IFieldRelation[];
     protected xpathCollection: string[];
+    protected requestedScopes: string[];
     protected scopes: string[];
 
-    constructor(protected configs: FieldsMapConfig[], scopes: string[]) {
+    constructor(protected configs: IFieldsMapConfig[], scopes: string[]) {
+        this.requestedScopes = scopes;
         for (let config of configs) {
-            let configObject : IFieldsMapConfig = config.toObject();
-            if (scopes.indexOf(configObject.scope) !== -1)
-                this.configs.push(configObject);
+            if (scopes.indexOf(config.scope) !== -1)
+                this.configs.push(config);
         }
 
         for (let config of this.configs) {
@@ -33,11 +48,11 @@ export class FieldsMap {
         }
     }
 
-    get rootRelations(): FieldRelation[] {
+    get rootRelations(): IFieldRelation[] {
         return this.rootRelations;
     }
 
-    get entityRelations(): FieldRelation[] {
+    get entityRelations(): IFieldRelation[] {
         return this.entityRelations;
     }
 
@@ -46,69 +61,4 @@ export class FieldsMap {
     }
 }
 
-export class FieldsMapConfig {
-    protected rootRelations: FieldRelation[] = [];
-    protected entityRelations: FieldRelation[] = [];
-    protected xpath: string = '';
-
-
-    public static createByScope(scope: string): FieldsMapConfig {
-        return new this(scope);
-    }
-
-    protected constructor(protected scope: string) {
-        return this;
-    }
-
-    public rootRelation(relations: FieldRelation[]): this {
-        this.rootRelations = concat(this.rootRelations, relations);
-        return this;
-    }
-
-    public entityRelation(relations: FieldRelation[]): this {
-        this.entityRelations = concat(this.entityRelations, relations);
-        return this;
-    }
-
-    public select(xpath: string): this {
-        this.xpath = xpath;
-        return this;
-    }
-
-    public toObject(): IFieldsMapConfig {
-        return {
-            rootRelations: this.rootRelations,
-            entityRelations: this.entityRelations,
-            xpath: this.xpath,
-            scope: this.scope
-        }
-    }
-}
-
-
-export class FieldRelation {
-
-    protected optional: boolean = false;
-
-    protected constructor(protected newPath: string, protected originPath: string) {
-
-    }
-
-    public static add(newPath: string, originPath: string): FieldRelation {
-        return new this(newPath, originPath);
-    }
-
-    public optional(): this {
-        this.optional = true;
-        return this;
-    }
-}
-
-
-interface IFieldsMapConfig {
-    rootRelations: FieldRelation[],
-    entityRelations: FieldRelation[],
-    xpath: string,
-    scope: string,
-};
 
