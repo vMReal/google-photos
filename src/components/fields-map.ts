@@ -1,20 +1,32 @@
-import {concat} from "lodash";
+import {concat, set as setData, get as getData, has } from "lodash";
 
 
-export const FIELDS = {
-    TITLE: 'title',
+export enum Scope {
+    User,
+    Entity,
+    Photo,
+    Gdata
+
 }
 
 export const FIELDS_MAPS_CONFIGS: IFieldsMapConfig[] = [
+    {
+        scope: Scope.Entity,
+        xpath: 'entry(gphoto:id)',
+        rootRelations: [],
+        entityRelations: [
+            { originPath: 'gphoto$id', path: 'id', optional: false}
+        ],
+    }
 
-]
+];
 
 
 export interface IFieldsMapConfig {
     rootRelations: IFieldRelation[]
     entityRelations: IFieldRelation[]
     xpath: string,
-    scope: string,
+    scope: number,
 }
 
 export interface IFieldRelation {
@@ -59,6 +71,37 @@ export class FieldsMap {
     get requestedFields(): string {
         return this.xpathCollection.join(',');
     }
+
+
+    public extractEntities(data): IItem[] {
+        let entities: IItem[];
+        for (let originEntity of data.entities) {;
+            entities.push( this.extract<IItem>(originEntity, this.entityRelations) );
+        }
+        return entities;
+    }
+
+    public extractResponse(data): IMeta {
+        return this.extract<IMeta>(data, this.rootRelations);
+    }
+
+    protected extract<T>(data: any, relations: IFieldRelation[]) {
+        let res: T;
+        for (let relation of relations) {
+            if (has(data, relation.originPath))
+                setData(res, relation.path, getData(data, relation.originPath));
+        }
+    }
+}
+
+
+export interface IItem{
+
+}
+
+
+export interface IMeta {
+
 }
 
 
