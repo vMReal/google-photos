@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 			declaration: true,
 			fast: 'never',
 			module: "commonjs",
-			target: "es5",
+			target: "es2015",
 			comments: true,
 		},
 		dev : {

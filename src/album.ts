@@ -4,15 +4,14 @@ import {Entity} from "./entity";
 import {SearchQuery} from "./search-query";
 
 
-export class Album extends Entity {
+export class Album {
 
     public static findById(id: string): Query {
         let urlBuilder = new UrlBuilder();
         urlBuilder.setProjection(PROJECTION.API);
         urlBuilder.setAlbumId(id);
 
-        let query = new Query(urlBuilder, KIND.ALBUM);
-        query.auth(this.bearToken);
+        let query: Query  = new Query(urlBuilder, KIND.ALBUM);
         return query;
     }
 
@@ -21,7 +20,6 @@ export class Album extends Entity {
         let urlBuilder: UrlBuilder = new UrlBuilder();
         urlBuilder.setProjection(PROJECTION.API);
         let query = new SearchQuery(urlBuilder, KIND.ALBUM);
-        query.auth(this.bearToken);
         return query;
     }
 }

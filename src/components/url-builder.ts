@@ -34,7 +34,7 @@ export class UrlBuilder {
         let url: string = BASE_URL;
 
         url += `/${this.projection}`;
-        url += `/user/${this.projection}`;
+        url += `/user/${this.userId}`;
 
         if (this.albumId)
             url += `/albumid/${this.albumId}`;

@@ -9,7 +9,6 @@ import {FieldsMap, IItem, IMeta} from "./fields-map";
 
 export class Response {
 
-
     protected items: IItem[] = [];
     protected meta: IMeta = {};
 
@@ -29,9 +28,5 @@ export class Response {
         return (isUndefined(this.items[0]))
             ? null
             : this.items[0];
-    }
-
-    get meta(): IMeta {
-        return this.meta;
     }
 }

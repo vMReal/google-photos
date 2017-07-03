@@ -54,31 +54,28 @@ export class QueryBuilder {
                 case 'alt':
                 case 'kind':
                 case 'prettyprint':
-                    query += `${key}=${ encodeURIComponent(this.params[key]) }`;
+                    query += `&${key}=${ encodeURIComponent(String(this.params[key])) }`;
                     break;
                 case 'location':
-                    query += `l=${ encodeURIComponent(this.params.location) }`;
+                    query += `&l=${ encodeURIComponent(this.params.location) }`;
                     break;
                 case 'limit':
-                    query += `max-results=${ encodeURIComponent(String(this.params.limit)) }`;
+                    query += `&max-results=${ encodeURIComponent(String(this.params.limit)) }`;
                     break;
                 case 'offset':
-                    query += `start-index=${ encodeURIComponent(String(this.params.offset)) }`;
+                    query += `&start-index=${ encodeURIComponent(String(this.params.offset)) }`;
                     break;
                 case 'bbox':
-                    query += `bbox=${ encodeURIComponent((<number[]> this.params.bbox).join(',')) }`;
-                    break;
-                case 'fields':
-                    query += `fields=${ encodeURIComponent( this.fieldsBuilder(this.params[key]) ) }`;
+                    query += `&bbox=${ encodeURIComponent((<number[]> this.params.bbox).join(',')) }`;
                     break;
                 case 'photo':
-                    query += `imgmax=${ encodeURIComponent(this.photoBuilder(this.params.photo)) }`;
+                    query += `&imgmax=${ encodeURIComponent(this.photoBuilder(this.params.photo)) }`;
                     break;
                 case 'thumbnails':
-                    query += `thumbsize=${ encodeURIComponent(this.thumbnailsBuilder(this.params.thumbnails)) }`;
+                    query += `&thumbsize=${ encodeURIComponent(this.thumbnailsBuilder(this.params.thumbnails)) }`;
                     break;
                 case  'fields':
-                    query += `fields=${ encodeURIComponent(this.params.fields) }`;
+                    query += `&fields=${ encodeURIComponent(this.params.fields) }`;
                     break;
             }
         }
@@ -88,7 +85,7 @@ export class QueryBuilder {
 
     protected fieldsBuilder(fields: string[]): string {
         return '';
-        https://picasaweb.google.com/data/feed/api/user/default?imgmax=d&kind=photo&v=3&fields=openSearch:totalResults,openSearch:startIndex,openSearch:itemsPerPage,gphoto:user,gphoto:nickname,entry(published,updated, gphoto:id,gphoto:albumid,gphoto:access,gphoto:height, gphoto:width,gphoto:size,gphoto:timestamp,gphoto:imageVersion, exif:tags/*, georss:where,gphoto:client,media:group)
+        //https://picasaweb.google.com/data/feed/api/user/default?imgmax=d&kind=photo&v=3&fields=openSearch:totalResults,openSearch:startIndex,openSearch:itemsPerPage,gphoto:user,gphoto:nickname,entry(published,updated, gphoto:id,gphoto:albumid,gphoto:access,gphoto:height, gphoto:width,gphoto:size,gphoto:timestamp,gphoto:imageVersion, exif:tags/*, georss:where,gphoto:client,media:group)
     }
 
     protected photoBuilder(photo: IPhotoSettings): string { //@TODO add waring by sizes
